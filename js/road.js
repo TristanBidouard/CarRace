@@ -1,5 +1,5 @@
-function Road(dir) {
-	this.spacing = 150;
+function Road(dir, level) {
+	this.spacing = 300 - 10*(level-1);
 	this.step = 10;
 	this.y = -this.step;
 	this.speed = 2;
@@ -9,6 +9,7 @@ function Road(dir) {
 	this.offsetUp = width/2 - this.spacing/2;
 	this.offsetDown = width/2 - this.spacing/2;
 	this.nextOffset = 0;
+	console.log(level);
 
 
 	this.show = function() {

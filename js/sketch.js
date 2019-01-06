@@ -1,16 +1,24 @@
 let car;
 let roads = [];
 let end = false;
+let score = 0;
+let bestScore = 0;
+let img;
+let level;
+
+function preload(){
+	img = loadImage("./img/warning.png");
+}
 
 function setup() {
 	createCanvas(1000, 500);
 	car =  new Car();
-	roads.push(new Road(0));
-	roads.push(new Road(0));
+	roads.push(new Road(0,1));
+	roads.push(new Road(0,1));
+	frameRate(50);
 }
 
 function draw() {
-
 	background(100);
 
 	for (var i = 0; i <= roads.length-2; i++) {
@@ -33,17 +41,32 @@ function draw() {
 
 	if(roads[roads.length-2].y == 0){
 		let dir = getRdm();
-		roads.push(new Road(dir));
+		roads.push(new Road(dir, level));
 	}
 	car.render();
 	car.turn();
 	car.update();
 	car.edges();
 
+	score += 1;
+
+	level = floor(score / 100) + 1;
+
 	if(end){
 		gameOver();
+		if(score > bestScore){
+			bestScore = score;
+		}
+		score = 0;
 	}
 
+	if(score % 1000 == 0){
+		displayLevel(level, false);
+	}else{
+		displayLevel(level, true);
+	}
+	displayScore(score, bestScore);
+	end = false;
 	
 }
 
@@ -66,12 +89,10 @@ function keyPressed() {
 
 function gameOver() {
 	push();
-	fill(50);
-	stroke(0);
+	fill(80);
 	textSize(100);
 	textAlign(CENTER);
-	text('Hit !', width/2, height/2);
-	end = false;
+	image(img, 10, height-200, 100, 100);
 	pop();
 }
 
@@ -84,4 +105,25 @@ function getRdm(){
 	}else if(rdm => 0.66){
 		return 0;
 	}
+}
+
+function displayScore(score, bestScore){
+	push();
+	if(end){
+		fill(255, 80, 80);
+	}else{
+		fill(50);
+	}
+	textSize(30);
+	text('SCORE : ' + score, 10, height-50);
+	text('BEST    : ' + bestScore, 10, height-10);
+	pop();
+}
+
+function displayLevel(level, flash){
+	push();
+	fill(50);
+	textSize(30);
+	text('LEVEL : ' + level, 10, 50);
+	pop();
 }
